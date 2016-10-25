@@ -7,4 +7,4 @@ guard-%:
 run:
 	docker-compose up
 exec: guard-args
-	docker-compose exec -it $(args)
+	docker-compose exec web $(args)
