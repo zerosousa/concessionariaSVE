@@ -6,5 +6,12 @@ guard-%:
 
 run:
 	docker-compose up
+
 exec: guard-args
 	docker-compose exec web $(args)
+
+stop:
+	docker-compose kill
+
+kill:
+	docker-compose rm -fv

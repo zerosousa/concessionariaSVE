@@ -2,8 +2,159 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-# Create your models here.
+class Transac(models.Field):
+    def db_type(self, connection):
+        return 'transac'
+
+class Bairro(models.Model):
+    id_bairro = models.AutoField(primary_key=True)
+    nm_bairro = models.CharField(max_length=1000, blank=True, null=True)
+    id_cidade = models.ForeignKey('Cidade', models.DO_NOTHING, db_column='id_cidade', blank=True, null=True)
+
+    class Meta:
+        db_table = 'bairro'
+
+
+class Cidade(models.Model):
+    id_cidade = models.AutoField(primary_key=True)
+    nm_cidade = models.CharField(max_length=1000, blank=True, null=True)
+    cd_uf = models.ForeignKey('Uf', models.DO_NOTHING, db_column='cd_uf', blank=True, null=True)
+
+    class Meta:
+        db_table = 'cidade'
+
+
+class Cliente(models.Model):
+    cd_cpfcliente = models.CharField(primary_key=True, max_length=11)
+    nm_cliente = models.CharField(max_length=1000, blank=True, null=True)
+    nu_telefone = models.CharField(max_length=1000, blank=True, null=True)
+    id_endereco = models.ForeignKey('Endereco', models.DO_NOTHING, db_column='id_endereco', blank=True, null=True)
+
+    class Meta:
+        db_table = 'cliente'
+
+class Endereco(models.Model):
+    id_endereco = models.AutoField(primary_key=True)
+    nu_numero = models.CharField(max_length=1000, blank=True, null=True)
+    cd_cep = models.CharField(max_length=1000, blank=True, null=True)
+    de_complemento = models.CharField(max_length=1000, blank=True, null=True)
+    id_logradouro = models.ForeignKey('Logradouro', models.DO_NOTHING, db_column='id_logradouro', blank=True, null=True)
+
+    class Meta:
+        db_table = 'endereco'
+
+
+class Funcionario(models.Model):
+    id_funcionario = models.AutoField(primary_key=True)
+    nm_funcionario = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'funcionario'
+
+
+class Local(models.Model):
+    id_local = models.AutoField(primary_key=True)
+    de_local = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'local'
+
+
+class Logradouro(models.Model):
+    id_logradouro = models.AutoField(primary_key=True)
+    nm_logradouro = models.CharField(max_length=1000, blank=True, null=True)
+    id_bairro = models.ForeignKey(Bairro, models.DO_NOTHING, db_column='id_bairro', blank=True, null=True)
+
+    class Meta:
+        db_table = 'logradouro'
+
+
+class Marca(models.Model):
+    id_marca = models.AutoField(primary_key=True)
+    de_marca = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'marca'
+
+
+class Modelo(models.Model):
+    id_modelo = models.AutoField(primary_key=True)
+    de_modelo = models.CharField(max_length=1000, blank=True, null=True)
+    id_marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='id_marca', blank=True, null=True)
+    nu_ano = models.BigIntegerField(blank=True, null=True)
+    nu_cilindradas = models.BigIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'modelo'
+
 
 class Moto(models.Model):
-    ano = models.CharField(max_length=200)
-    cor = models.CharField(max_length=200)
+    cd_chassi = models.CharField(primary_key=True, max_length=1000)
+    placa = models.CharField(max_length=1000, blank=True, null=True)
+    cor = models.CharField(max_length=1000, blank=True, null=True)
+    ano_fabricacao = models.CharField(max_length=1000, blank=True, null=True)
+    id_local = models.ForeignKey(Local, models.DO_NOTHING, db_column='id_local', blank=True, null=True)
+    id_modelo = models.ForeignKey(Modelo, models.DO_NOTHING, db_column='id_modelo', blank=True, null=True)
+
+    class Meta:
+        db_table = 'moto'
+
+
+class Ordemservico(models.Model):
+    nu_ordem = models.AutoField(primary_key=True)
+    cd_cpfcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cd_cpfcliente', blank=True, null=True)
+    dt_ordem = models.CharField(max_length=1000, blank=True, null=True)
+    cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
+    id_funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario', blank=True, null=True)
+
+    class Meta:
+        db_table = 'ordemservico'
+
+
+class Produto(models.Model):
+    id_produto = models.AutoField(primary_key=True)
+    de_produto = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'produto'
+
+
+class Servico(models.Model):
+    id_servico = models.AutoField(primary_key=True)
+    de_servico = models.CharField(max_length=1000, blank=True, null=True)
+    nu_valor = models.BigIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'servico'
+
+
+class Servicoporordem(models.Model):
+    id_servico = models.ForeignKey(Servico, models.DO_NOTHING, db_column='id_servico')
+    nu_ordem = models.ForeignKey(Ordemservico, models.DO_NOTHING, db_column='nu_ordem')
+    id_funcionario = models.CharField(max_length=1000, blank=True, null=True)
+    id_produto = models.BigIntegerField(blank=True, null=True)
+    nu_quantidade = models.BigIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'servicoporordem'
+        unique_together = (('id_servico', 'nu_ordem'),)
+
+
+class Transacao(models.Model):
+    id_notafiscal = models.CharField(primary_key=True, max_length=1000)
+    dt_data = models.CharField(max_length=1000, blank=True, null=True)
+    tp_transacao = Transac(blank=True, null=True)
+    id_funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario', blank=True, null=True)
+    cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
+    cd_cpfcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cd_cpfcliente', blank=True, null=True)
+
+    class Meta:
+        db_table = 'transacao'
+
+
+class Uf(models.Model):
+    cd_uf = models.CharField(primary_key=True, max_length=1000)
+    nm_uf = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        db_table = 'uf'
