@@ -11,6 +11,9 @@ class Bairro(models.Model):
     nm_bairro = models.CharField(max_length=1000, blank=True, null=True)
     id_cidade = models.ForeignKey('Cidade', models.DO_NOTHING, db_column='id_cidade', blank=True, null=True)
 
+    def __str__(self):
+        return self.nm_bairro
+    
     class Meta:
         db_table = 'bairro'
 
@@ -19,6 +22,9 @@ class Cidade(models.Model):
     id_cidade = models.AutoField(primary_key=True)
     nm_cidade = models.CharField(max_length=1000, blank=True, null=True)
     cd_uf = models.ForeignKey('Uf', models.DO_NOTHING, db_column='cd_uf', blank=True, null=True)
+
+    def __str__(self):
+        return self.nm_cidade
 
     class Meta:
         db_table = 'cidade'
@@ -30,6 +36,9 @@ class Cliente(models.Model):
     nu_telefone = models.CharField(max_length=1000, blank=True, null=True)
     id_endereco = models.ForeignKey('Endereco', models.DO_NOTHING, db_column='id_endereco', blank=True, null=True)
 
+    def __str__(self):
+        return self.cd_cpfcliente
+
     class Meta:
         db_table = 'cliente'
 
@@ -40,6 +49,9 @@ class Endereco(models.Model):
     de_complemento = models.CharField(max_length=1000, blank=True, null=True)
     id_logradouro = models.ForeignKey('Logradouro', models.DO_NOTHING, db_column='id_logradouro', blank=True, null=True)
 
+    def __str__(self):
+        return self.id_endereco
+
     class Meta:
         db_table = 'endereco'
 
@@ -48,6 +60,9 @@ class Funcionario(models.Model):
     id_funcionario = models.AutoField(primary_key=True)
     nm_funcionario = models.CharField(max_length=1000, blank=True, null=True)
 
+    def __str__(self):
+        return self.nm_funcionario
+
     class Meta:
         db_table = 'funcionario'
 
@@ -55,6 +70,9 @@ class Funcionario(models.Model):
 class Local(models.Model):
     id_local = models.AutoField(primary_key=True)
     de_local = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+        return self.de_local
 
     class Meta:
         db_table = 'local'
@@ -65,6 +83,9 @@ class Logradouro(models.Model):
     nm_logradouro = models.CharField(max_length=1000, blank=True, null=True)
     id_bairro = models.ForeignKey(Bairro, models.DO_NOTHING, db_column='id_bairro', blank=True, null=True)
 
+    def __str__(self):
+        return self.nm_logradouro
+
     class Meta:
         db_table = 'logradouro'
 
@@ -72,6 +93,9 @@ class Logradouro(models.Model):
 class Marca(models.Model):
     id_marca = models.AutoField(primary_key=True)
     de_marca = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+        return self.de_marca
 
     class Meta:
         db_table = 'marca'
@@ -83,6 +107,9 @@ class Modelo(models.Model):
     id_marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='id_marca', blank=True, null=True)
     nu_ano = models.BigIntegerField(blank=True, null=True)
     nu_cilindradas = models.BigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.de_modelo
 
     class Meta:
         db_table = 'modelo'
@@ -97,7 +124,7 @@ class Moto(models.Model):
     id_modelo = models.ForeignKey(Modelo, models.DO_NOTHING, db_column='id_modelo', blank=True, null=True)
 
     def __str__(self):
-        return '%s ; %s' % (self.placa, self.cd_chassi)
+        return self.cd_chassi
         
     class Meta:
         db_table = 'moto'
@@ -110,6 +137,9 @@ class Ordemservico(models.Model):
     cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
     id_funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario', blank=True, null=True)
 
+    def __str__(self):
+        return '%s ; %s ; %s ; %s' % (self.nu_ordem, self.cd_cpfcliente, self.dt_ordem, self.cd_chassi)
+
     class Meta:
         db_table = 'ordemservico'
 
@@ -117,6 +147,9 @@ class Ordemservico(models.Model):
 class Produto(models.Model):
     id_produto = models.AutoField(primary_key=True)
     de_produto = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+        return self.de_produto
 
     class Meta:
         db_table = 'produto'
@@ -126,6 +159,9 @@ class Servico(models.Model):
     id_servico = models.AutoField(primary_key=True)
     de_servico = models.CharField(max_length=1000, blank=True, null=True)
     nu_valor = models.BigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.de_servico
 
     class Meta:
         db_table = 'servico'
@@ -137,6 +173,9 @@ class Servicoporordem(models.Model):
     id_funcionario = models.CharField(max_length=1000, blank=True, null=True)
     id_produto = models.BigIntegerField(blank=True, null=True)
     nu_quantidade = models.BigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return '%s ; %s' % (self.id_servico, self.nu_ordem)
 
     class Meta:
         db_table = 'servicoporordem'
@@ -151,6 +190,9 @@ class Transacao(models.Model):
     cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
     cd_cpfcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cd_cpfcliente', blank=True, null=True)
 
+    def __str__(self):
+        return '%s ; %s ; %s' % (self.tp_transacao, self.dt_data, self.cd_cpfcliente)
+
     class Meta:
         db_table = 'transacao'
 
@@ -158,6 +200,9 @@ class Transacao(models.Model):
 class Uf(models.Model):
     cd_uf = models.CharField(primary_key=True, max_length=1000)
     nm_uf = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+        return self.nm_uf
 
     class Meta:
         db_table = 'uf'
