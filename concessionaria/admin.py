@@ -3,22 +3,67 @@ from django.contrib import admin
 # Register your models here.
 from .models import *
 
-class MotoAdmin(admin.ModelAdmin):
-    list_display = ('placa')
+class BairroAdmin(admin.ModelAdmin):
+    list_display = ['nm_bairro']
 
-admin.site.register(Bairro)
-admin.site.register(Cidade)
-admin.site.register(Cliente)
-admin.site.register(Endereco)
-admin.site.register(Funcionario)
-admin.site.register(Local)
-admin.site.register(Logradouro)
-admin.site.register(Marca)
-admin.site.register(Modelo)
+class CidadeAdmin(admin.ModelAdmin):
+    list_display = ['nm_cidade']
+    
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ['nm_cliente']
+
+class EnderecoAdmin(admin.ModelAdmin):
+    list_display = ['cd_cep', 'nu_numero', 'de_complemento']
+
+class FuncionarioAdmin(admin.ModelAdmin):
+    list_display = ['nm_funcionario']
+
+class LocalAdmin(admin.ModelAdmin):
+    list_display = ['de_local']
+
+class LogradouroAdmin(admin.ModelAdmin):
+    list_display = ['nm_logradouro']
+
+class MarcaAdmin(admin.ModelAdmin):
+    list_display = ['de_marca']
+
+class ModeloAdmin(admin.ModelAdmin):
+    list_display = ['de_modelo']
+
+class MotoAdmin(admin.ModelAdmin):
+    list_display = ['placa', 'cd_chassi']
+
+class OrdemservicoAdmin(admin.ModelAdmin):
+    list_display = ['dt_ordem']
+
+class ProdutoAdmin(admin.ModelAdmin):
+    list_display = ['de_produto']
+
+class ServicoAdmin(admin.ModelAdmin):
+    list_display = ['de_servico']
+
+class ServicoporordemAdmin(admin.ModelAdmin):
+    list_display = ['nu_quantidade']
+
+class TransacaoAdmin(admin.ModelAdmin):
+    list_display = ['dt_data']
+
+class UfAdmin(admin.ModelAdmin):
+    list_display = ['nm_uf']
+
+admin.site.register(Bairro, BairroAdmin)
+admin.site.register(Cidade, CidadeAdmin)
+admin.site.register(Cliente, ClienteAdmin)
+admin.site.register(Endereco, EnderecoAdmin)
+admin.site.register(Funcionario, FuncionarioAdmin)
+admin.site.register(Local, LocalAdmin)
+admin.site.register(Logradouro, LogradouroAdmin)
+admin.site.register(Marca, MarcaAdmin)
+admin.site.register(Modelo, ModeloAdmin)
 admin.site.register(Moto, MotoAdmin)
-admin.site.register(Ordemservico)
-admin.site.register(Produto)
-admin.site.register(Servico)
-admin.site.register(Servicoporordem)
-admin.site.register(Transacao)
-admin.site.register(Uf)
+admin.site.register(Ordemservico, OrdemservicoAdmin)
+admin.site.register(Produto, ProdutoAdmin)
+admin.site.register(Servico, ServicoAdmin)
+admin.site.register(Servicoporordem, ServicoporordemAdmin)
+admin.site.register(Transacao, TransacaoAdmin)
+admin.site.register(Uf, UfAdmin)
