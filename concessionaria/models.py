@@ -96,6 +96,9 @@ class Moto(models.Model):
     id_local = models.ForeignKey(Local, models.DO_NOTHING, db_column='id_local', blank=True, null=True)
     id_modelo = models.ForeignKey(Modelo, models.DO_NOTHING, db_column='id_modelo', blank=True, null=True)
 
+    def __str__(self):
+        return '%s ; %s' % (self.placa, self.cd_chassi)
+        
     class Meta:
         db_table = 'moto'
 
