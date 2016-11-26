@@ -29,8 +29,26 @@ class MarcaAdmin(admin.ModelAdmin):
 
 class ModeloAdmin(admin.ModelAdmin):
     list_display = ['de_modelo']
-    def has_delete_permission(self, request, obj=None):
-        return False
+
+    def add_view(self, request, form_url='', extra_context=None):
+        try:
+            return super(ModeloAdmin, self).add_view(request, form_url, extra_context)
+        except (IntegrityError, DatabaseError) as e:
+
+            request.method = 'GET'
+            messages.error(request, e.message)
+            return super(ModeloAdmin, self).add_view(request, form_url, extra_context)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        try:
+            return super(ModeloAdmin, self).change_view(request, object_id, form_url, extra_context)
+        except (IntegrityError, DatabaseError) as e:
+
+            request.method = 'GET'
+            messages.error(request, e.message)
+            return super(ModeloAdmin, self).change_view(request, object_id, form_url, extra_context)
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 
 class MotoAdmin(admin.ModelAdmin):
