@@ -29,6 +29,9 @@ class MarcaAdmin(admin.ModelAdmin):
 
 class ModeloAdmin(admin.ModelAdmin):
     list_display = ['de_modelo']
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class MotoAdmin(admin.ModelAdmin):
     list_display = ['placa', 'cd_chassi']

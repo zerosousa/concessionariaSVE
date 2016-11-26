@@ -109,12 +109,6 @@ class Modelo(models.Model):
     nu_ano = models.BigIntegerField(blank=True, null=True)
     nu_cilindradas = models.BigIntegerField(blank=True, null=True)
 
-    def delete(self, *args, **kwargs):
-        try:
-            super().delete(*args, **kwargs)
-        except:
-            raise ValidationError('Este modelo esta associado a uma moto.')
-
     def __str__(self):
         return self.de_modelo
 
