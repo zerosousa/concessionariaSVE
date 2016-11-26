@@ -30,6 +30,14 @@ class MarcaAdmin(admin.ModelAdmin):
 class ModeloAdmin(admin.ModelAdmin):
     list_display = ['de_modelo']
 
+    def delete_view(self, request, object_id, extra_context=None):
+        try:
+            return super(ModeloAdmin, self).delete_view(request, object_id, extra_context)
+        except (IntegrityError, DatabaseError) as e:
+            request.method = 'GET'
+            messages.error(request, e.message)
+            return super(ModeloAdmin, self).changelist_view(request, extra_context)
+
 class MotoAdmin(admin.ModelAdmin):
     list_display = ['placa', 'cd_chassi']
 

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib import messages
 from django.db import IntegrityError
 
 class Transac(models.Field):
@@ -109,11 +110,12 @@ class Modelo(models.Model):
     nu_ano = models.BigIntegerField(blank=True, null=True)
     nu_cilindradas = models.BigIntegerField(blank=True, null=True)
 
-    def delete(self, *args, **kwargs):
-        try:
-            super(Modelo,self).delete(*args, **kwargs)
-        except IntegrityError as e:
-            return 'Nao eh possivel remover este modelo, pois o mesmo esta sendo usado em uma Moto.'
+    # def delete(self, *args, **kwargs):
+    #     try:
+    #         super(Modelo,self).delete(*args, **kwargs)
+    #     except IntegrityError as e:
+            
+    #         return 'Nao eh possivel remover este modelo, pois o mesmo esta sendo usado em uma Moto.'
 
     def __str__(self):
         return self.de_modelo
