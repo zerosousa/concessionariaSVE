@@ -113,7 +113,7 @@ class Modelo(models.Model):
         try:
             super().delete(*args, **kwargs)
         except IntegrityError as e:
-            return u'Não é possível remover este modelo, pois o mesmo está sendo usado em uma Moto.'
+            return 'Não eh possivel remover este modelo, pois o mesmo esta sendo usado em uma Moto.'
 
     def __str__(self):
         return self.de_modelo
