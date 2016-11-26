@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db import IntegrityError
 
 # Register your models here.
 from .models import *
@@ -33,7 +34,7 @@ class ModeloAdmin(admin.ModelAdmin):
     def delete_view(self, request, object_id, extra_context=None):
         try:
             return super(ModeloAdmin, self).delete_view(request, object_id, extra_context)
-        except (IntegrityError, DatabaseError) as e:
+        except (IntegrityError) as e:
             request.method = 'GET'
             messages.error(request, e.message)
             return super(ModeloAdmin, self).changelist_view(request, extra_context)
