@@ -112,7 +112,7 @@ class Modelo(models.Model):
         try:
             super().delete(*args, **kwargs)
         except:
-            raise ValidationError('Este modelo está associado a uma moto.')
+            raise ValidationError("Este modelo está associado a uma moto.")
 
     def __str__(self):
         return self.de_modelo
