@@ -111,7 +111,7 @@ class Modelo(models.Model):
 
     def delete(self, *args, **kwargs):
         try:
-            super().delete(*args, **kwargs)
+            super(Modelo,self).delete(*args, **kwargs)
         except IntegrityError as e:
             return 'Nao eh possivel remover este modelo, pois o mesmo esta sendo usado em uma Moto.'
 
