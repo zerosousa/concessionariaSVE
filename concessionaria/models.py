@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Transac(models.Field):
     def db_type(self, connection):
@@ -112,7 +113,7 @@ class Modelo(models.Model):
         try:
             super().delete(*args, **kwargs)
         except:
-            raise ValidationError("Este modelo está associado a uma moto.")
+            raise ValidationError('Este modelo esta associado a uma moto.')
 
     def __str__(self):
         return self.de_modelo
