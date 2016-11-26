@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 
 class Transac(models.Field):
     def db_type(self, connection):
@@ -108,6 +108,12 @@ class Modelo(models.Model):
     id_marca = models.ForeignKey(Marca, models.DO_NOTHING, db_column='id_marca', blank=True, null=True)
     nu_ano = models.BigIntegerField(blank=True, null=True)
     nu_cilindradas = models.BigIntegerField(blank=True, null=True)
+
+    def delete(self, *args, **kwargs):
+        try:
+            super().delete(*args, **kwargs)
+        except IntegrityError as e:
+            return "Não é possível remover este modelo, pois o mesmo está sendo usado em uma Moto."
 
     def __str__(self):
         return self.de_modelo
