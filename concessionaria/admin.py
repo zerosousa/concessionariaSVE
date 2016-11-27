@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db import IntegrityError
+from django.db.models import Sum
 
 # Register your models here.
 from .models import *
@@ -141,7 +142,7 @@ class ServicoAdmin(admin.ModelAdmin):
             return super(ServicoAdmin, self).changelist_view(request, extra_context)
 
 class ServicoporordemAdmin(admin.ModelAdmin):
-    list_display = ['numero_ordem', 'moto_chassi', 'moto_placa']
+    list_display = ['numero_ordem', 'moto_chassi', 'moto_placa', 'sum_valor_servico']
 
     def moto_chassi(self, instance):
         return instance.ordemservico.moto.cd_chassi
@@ -151,6 +152,13 @@ class ServicoporordemAdmin(admin.ModelAdmin):
 
     def numero_ordem(self, instance):
         return instance.ordemservico.nu_ordem
+
+    def queryset(self, request):
+        qs = super(ServicoporordemAdmin, self).queryset(request)
+        return qs.annotate(valor_servico=Sum('servico__nu_valor'))
+
+    def sum_valor_servico(self, obj):
+      return obj.valor_servico
 
 class TransacaoAdmin(admin.ModelAdmin):
     list_display = ['dt_data']
