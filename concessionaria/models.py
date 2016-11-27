@@ -219,6 +219,6 @@ class NfDetalhada(models.Model):
 
     class Meta:
         db_table = 'vw_nf_detalhada'
-        unique_together = ('cd_chassi', 'placa', 'nu_ordem')
+        unique_together = (('cd_chassi', 'placa', 'nu_ordem'),)
         managed = False
         
