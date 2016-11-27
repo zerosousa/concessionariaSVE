@@ -137,6 +137,7 @@ class Ordemservico(models.Model):
     dt_ordem = models.CharField(max_length=1000, blank=True, null=True)
     cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
     id_funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario', blank=True, null=True)
+    servicos = models.ManyToManyField(Servico, through='Servicoporordem')
 
     def __str__(self):
         return '%s ; %s ; %s ; %s' % (self.nu_ordem, self.cd_cpfcliente, self.dt_ordem, self.cd_chassi)
