@@ -177,7 +177,7 @@ class Servicoporordem(models.Model):
     nu_quantidade = models.BigIntegerField(blank=True, null=True)
 
     def __str__(self):
-        return '%s ; %s' % (self.id_servico, self.nu_ordem)
+        return '%s ; %s' % (self.servico, self.nu_ordem)
 
     class Meta:
         db_table = 'servicoporordem'
