@@ -131,6 +131,18 @@ class Moto(models.Model):
         db_table = 'moto'
 
 
+class Servico(models.Model):
+    id_servico = models.AutoField(primary_key=True)
+    de_servico = models.CharField(max_length=1000, blank=True, null=True)
+    nu_valor = models.BigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.de_servico
+
+    class Meta:
+        db_table = 'servico'
+
+
 class Ordemservico(models.Model):
     nu_ordem = models.AutoField(primary_key=True)
     cd_cpfcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cd_cpfcliente', blank=True, null=True)
@@ -155,18 +167,6 @@ class Produto(models.Model):
 
     class Meta:
         db_table = 'produto'
-
-
-class Servico(models.Model):
-    id_servico = models.AutoField(primary_key=True)
-    de_servico = models.CharField(max_length=1000, blank=True, null=True)
-    nu_valor = models.BigIntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return self.de_servico
-
-    class Meta:
-        db_table = 'servico'
 
 
 class Servicoporordem(models.Model):
