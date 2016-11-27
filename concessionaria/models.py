@@ -152,7 +152,7 @@ class Ordemservico(models.Model):
     servicos = models.ManyToManyField(Servico, through='Servicoporordem')
 
     def __str__(self):
-        return '%s ; %s ; %s ; %s' % (self.nu_ordem, self.cd_cpfcliente, self.dt_ordem, self.cd_chassi)
+        return '%s ; %s ; %s ; %s' % (self.nu_ordem, self.cd_cpfcliente, self.dt_ordem, self.moto)
 
     class Meta:
         db_table = 'ordemservico'
