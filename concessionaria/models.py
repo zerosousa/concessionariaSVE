@@ -170,7 +170,7 @@ class Produto(models.Model):
 
 
 class Servicoporordem(models.Model):
-    id_servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
+    servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
     ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
     id_funcionario = models.CharField(max_length=1000, blank=True, null=True)
     id_produto = models.BigIntegerField(blank=True, null=True)
@@ -183,7 +183,7 @@ class Servicoporordem(models.Model):
         db_table = 'servicoporordem'
         verbose_name = "Nf detalhada"
         verbose_name_plural = "Nf detalhadas"
-        unique_together = (('id_servico', 'nu_ordem'),)
+        unique_together = (('servico', 'ordemservico'),)
 
 
 class Transacao(models.Model):
