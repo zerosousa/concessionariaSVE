@@ -153,7 +153,7 @@ class ServicoporordemAdmin(admin.ModelAdmin):
     def numero_ordem(self, instance):
         return instance.ordemservico.nu_ordem
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         qs = super(ServicoporordemAdmin, self).queryset(request)
         return qs.annotate(valor_servico=Sum('servico__nu_valor'))
 
