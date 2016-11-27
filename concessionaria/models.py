@@ -170,7 +170,7 @@ class Produto(models.Model):
 
 
 class Servicoporordem(models.Model):
-    servico = models.ForeignKey(Servico, models.DO_NOTHING, db_column='id_servico')
+    servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
     ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
     funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario')
     produto = models.ForeignKey(Produto, models.DO_NOTHING, db_column='id_produto')
