@@ -219,6 +219,6 @@ class NfDetalhada(models.Model):
 
     class Meta:
         db_table = 'vw_nf_detalhada'
-        abstracted = True
+        abstract = True
         managed = False
         
