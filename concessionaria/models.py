@@ -147,7 +147,7 @@ class Ordemservico(models.Model):
     nu_ordem = models.AutoField(primary_key=True)
     cd_cpfcliente = models.ForeignKey(Cliente, models.DO_NOTHING, db_column='cd_cpfcliente', blank=True, null=True)
     dt_ordem = models.CharField(max_length=1000, blank=True, null=True)
-    cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
+    moto = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
     id_funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario', blank=True, null=True)
     servicos = models.ManyToManyField(Servico, through='Servicoporordem')
 
@@ -171,7 +171,7 @@ class Produto(models.Model):
 
 class Servicoporordem(models.Model):
     id_servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
-    nu_ordem = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
+    ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
     id_funcionario = models.CharField(max_length=1000, blank=True, null=True)
     id_produto = models.BigIntegerField(blank=True, null=True)
     nu_quantidade = models.BigIntegerField(blank=True, null=True)
