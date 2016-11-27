@@ -180,6 +180,8 @@ class Servicoporordem(models.Model):
 
     class Meta:
         db_table = 'servicoporordem'
+        verbose_name = "Nf detalhada"
+        verbose_name_plural = "Nf detalhadas"
         unique_together = (('id_servico', 'nu_ordem'),)
 
 
@@ -207,18 +209,3 @@ class Uf(models.Model):
 
     class Meta:
         db_table = 'uf'
-
-class NfDetalhada(models.Model):
-    cd_chassi = models.ForeignKey(Moto, models.DO_NOTHING, db_column='cd_chassi', blank=True, null=True)
-    placa = models.CharField(max_length=1000, blank=True, null=True)
-    nu_ordem = models.ForeignKey(Ordemservico, models.DO_NOTHING, db_column='nu_ordem')
-    sum_nu_valor = models.BigIntegerField(blank=True, null=True)
-    
-    def __str__(self):
-        return self.cd_chassi
-
-    class Meta:
-        db_table = 'vw_nf_detalhada'
-        abstract = True
-        managed = False
-        

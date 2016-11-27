@@ -141,7 +141,16 @@ class ServicoAdmin(admin.ModelAdmin):
             return super(ServicoAdmin, self).changelist_view(request, extra_context)
 
 class ServicoporordemAdmin(admin.ModelAdmin):
-    list_display = ['nu_quantidade']
+    list_display = ['nu_quantidade', 'get_nu_ordem', 'moto_chassi', 'moto_placa']
+
+    def moto_chassi(self, instance):
+        return instance.ordemservico.moto.cd_chassi
+
+    def moto_placa(self, instance):
+        return instance.ordemservico.moto.placa
+
+    def get_nu_ordem(self, instance):
+        return instance.ordemservico.nu_ordem
 
 class TransacaoAdmin(admin.ModelAdmin):
     list_display = ['dt_data']
@@ -156,9 +165,6 @@ class UfAdmin(admin.ModelAdmin):
             request.method = 'GET'
             messages.error(request, e.message)
             return super(UfAdmin, self).changelist_view(request, extra_context)
-
-class NfDetalhadaAdmin(admin.ModelAdmin):
-    list_display = ['cd_chassi', 'placa', 'nu_ordem', 'sum_nu_valor']
 
 admin.site.register(Bairro, BairroAdmin)
 admin.site.register(Cidade, CidadeAdmin)
@@ -176,4 +182,3 @@ admin.site.register(Servico, ServicoAdmin)
 admin.site.register(Servicoporordem, ServicoporordemAdmin)
 admin.site.register(Transacao, TransacaoAdmin)
 admin.site.register(Uf, UfAdmin)
-admin.site.register(NfDetalhada, NfDetalhadaAdmin)
