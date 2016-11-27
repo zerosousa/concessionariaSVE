@@ -157,6 +157,9 @@ class UfAdmin(admin.ModelAdmin):
             messages.error(request, e.message)
             return super(UfAdmin, self).changelist_view(request, extra_context)
 
+class NfDetalhadaAdmin(admin.ModelAdmin):
+    list_display = ['cd_chassi', 'placa', 'nu_ordem', 'sum_nu_valor']
+
 admin.site.register(Bairro, BairroAdmin)
 admin.site.register(Cidade, CidadeAdmin)
 admin.site.register(Cliente, ClienteAdmin)
@@ -173,3 +176,4 @@ admin.site.register(Servico, ServicoAdmin)
 admin.site.register(Servicoporordem, ServicoporordemAdmin)
 admin.site.register(Transacao, TransacaoAdmin)
 admin.site.register(Uf, UfAdmin)
+admin.site.register(NfDetalhada, NfDetalhadaAdmin)
