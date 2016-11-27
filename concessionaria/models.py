@@ -170,8 +170,8 @@ class Produto(models.Model):
 
 
 class Servicoporordem(models.Model):
-    id_servico = models.ForeignKey(Servico, models.DO_NOTHING, db_column='id_servico')
-    nu_ordem = models.ForeignKey(Ordemservico, models.DO_NOTHING, db_column='nu_ordem')
+    id_servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
+    nu_ordem = models.ForeignKey(Ordemservico, models.DO_NOTHING primary_key=True, db_column='nu_ordem')
     id_funcionario = models.CharField(max_length=1000, blank=True, null=True)
     id_produto = models.BigIntegerField(blank=True, null=True)
     nu_quantidade = models.BigIntegerField(blank=True, null=True)
