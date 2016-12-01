@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib import messages
+from django_pgviews import view as pg
 
 class Transac(models.Field):
     def db_type(self, connection):
@@ -170,8 +171,9 @@ class Produto(models.Model):
 
 
 class Servicoporordem(models.Model):
-    servico = models.ForeignKey(Servico, models.DO_NOTHING, primary_key=True, db_column='id_servico')
-    ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
+    id_servicoporordem = models.AutoField(primary_key=True)
+    servico = models.ForeignKey(Servico, models.DO_NOTHING, db_column='id_servico')
+    ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, db_column='nu_ordem')
     funcionario = models.ForeignKey(Funcionario, models.DO_NOTHING, db_column='id_funcionario')
     produto = models.ForeignKey(Produto, models.DO_NOTHING, db_column='id_produto')
     nu_quantidade = models.BigIntegerField(blank=True, null=True)
@@ -181,8 +183,6 @@ class Servicoporordem(models.Model):
 
     class Meta:
         db_table = 'servicoporordem'
-        verbose_name = "Nf detalhada"
-        verbose_name_plural = "Nf detalhadas"
         unique_together = (('servico', 'ordemservico'),)
 
 
@@ -210,3 +210,86 @@ class Uf(models.Model):
 
     class Meta:
         db_table = 'uf'
+
+class NfDetalhada(pg.View):
+    ordemservico = models.ForeignKey(Ordemservico, models.DO_NOTHING, primary_key=True, db_column='nu_ordem')
+    sum_valor = models.BigIntegerField(blank=True, null=True, db_column='sum')
+    projection = ['concessionaria.Moto.cd_chassi', 'concessionaria.Moto.placa', 'concessionaria.Ordemservico.nu_ordem', 'concessionaria.Servico.nu_valor']
+    sql = """SELECT mo.cd_chassi, mo.placa, os.nu_ordem, sum(se.nu_valor)
+               FROM MOTO mo
+               JOIN ORDEMSERVICO os ON (mo.cd_chassi = os.cd_chassi)
+               JOIN ServicoPorOrdem so ON (os.nu_ordem = so.nu_ordem)
+               JOIN servico se ON (so.id_servico = se.id_servico)
+               GROUP BY 1, 2, 3;"""
+
+    class Meta:
+      app_label = 'concessionaria'
+      db_table = 'vw_nf_detalhada'
+      managed = False
+
+class MotoDetalhada(pg.View):
+    moto = models.ForeignKey(Moto, models.DO_NOTHING, primary_key=True, db_column='cd_chassi')
+    projection = ['concessionaria.Moto.cd_chassi',
+                  'concessionaria.Marca.de_marca',
+                  'concessionaria.Modelo.de_modelo',
+                  'concessionaria.Moto.cor',
+                  'concessionaria.Moto.ano_fabricacao',
+                  'concessionaria.Modelo.nu_cilindradas',
+                  'concessionaria.Moto.placa',
+                  'concessionaria.Local.de_local']
+    sql = """SELECT mo.cd_chassi, ma.de_marca, ml.de_modelo, mo.cor, mo.ano_fabricacao, ml.nu_cilindradas, mo.placa, lo.de_local
+               FROM MOTO mo
+               JOIN modelo ml on (mo.id_modelo = ml.id_modelo)
+               JOIN marca ma on (ml.id_marca = ma.id_marca)
+               JOIN local lo on (mo.id_local = lo.id_local);"""
+
+    class Meta:
+      app_label = 'concessionaria'
+      db_table = 'vw_moto_detalhada'
+      managed = False
+
+class ClienteDetalhado(pg.View):
+    cliente = models.ForeignKey(Cliente, models.DO_NOTHING, primary_key=True, db_column='cd_cpfcliente')
+    cd_chassi = models.CharField(max_length=1000, blank=True, null=True, db_column='cd_chassi')
+    de_marca = models.CharField(max_length=1000, blank=True, null=True, db_column='de_marca')
+    de_modelo = models.CharField(max_length=1000, blank=True, null=True, db_column='de_modelo')
+    cor = models.CharField(max_length=1000, blank=True, null=True, db_column='cor')
+    ano_fabricacao = models.CharField(max_length=1000, blank=True, null=True, db_column='ano_fabricacao')
+    nu_cilindradas = models.BigIntegerField(blank=True, null=True, db_column='nu_cilindradas')
+    placa = models.CharField(max_length=1000, blank=True, null=True, db_column='placa')
+    de_local = models.CharField(max_length=1000, blank=True, null=True, db_column='de_local')
+    projection = ['concessionaria.Cliente.cd_cpfcliente',
+                  'concessionaria.Cliente.nm_cliente',
+                  'concessionaria.Cliente.nu_telefone',
+                  'concessionaria.Logradouro.nm_logradouro',
+                  'concessionaria.Endereco.nu_numero',
+                  'concessionaria.Bairro.nm_bairro',
+                  'concessionaria.Endereco.cd_cep',
+                  'concessionaria.Cidade.nm_cidade',
+                  'concessionaria.Uf.nm_uf',
+                  'concessionaria.Moto.cd_chassi',
+                  'concessionaria.Marca.de_marca',
+                  'concessionaria.Modelo.de_modelo',
+                  'concessionaria.Moto.cor',
+                  'concessionaria.Moto.ano_fabricacao',
+                  'concessionaria.Modelo.nu_cilindradas',
+                  'concessionaria.Moto.placa',
+                  'concessionaria.Local.de_local']
+    sql = """SELECT cl.cd_cpfCliente, cl.nm_cliente, cl.nu_telefone, lg.nm_logradouro, en.nu_numero, ba.nm_bairro, en.cd_cep, ci.nm_cidade, uf.nm_uf, mo.cd_chassi, ma.de_marca, ml.de_modelo, mo.cor, mo.ano_fabricacao, ml.nu_cilindradas, mo.placa, lo.de_local
+               FROM CLIENTE cl
+               LEFT JOIN ENDERECO en on (cl.id_endereco = en.id_endereco)
+               LEFT JOIN LOGRADOURO lg on (en.id_logradouro = lg.id_logradouro)
+               LEFT JOIN BAIRRO ba on (lg.id_bairro = ba.id_bairro)
+               LEFT JOIN CIDADE ci on (ba.id_cidade = ci.id_cidade)
+               LEFT JOIN UF uf on (ci.cd_uf = uf.cd_uf)
+               LEFT JOIN ORDEMSERVICO os on (cl.cd_cpfCliente = os.cd_cpfCliente)
+               LEFT JOIN MOTO mo on (os.cd_chassi = mo.cd_chassi)
+               LEFT JOIN MODELO ml on (mo.id_modelo = ml.id_modelo)
+               LEFT JOIN MARCA ma on (ml.id_marca = ma.id_marca)
+               LEFT JOIN local lo on (mo.id_local = lo.id_local);"""
+
+    class Meta:
+      app_label = 'concessionaria'
+      db_table = 'vw_cliente_detalhado'
+      managed = False
+      

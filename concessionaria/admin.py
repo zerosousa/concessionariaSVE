@@ -142,7 +142,7 @@ class ServicoAdmin(admin.ModelAdmin):
             return super(ServicoAdmin, self).changelist_view(request, extra_context)
 
 class ServicoporordemAdmin(admin.ModelAdmin):
-    list_display = ['numero_ordem', 'moto_chassi', 'moto_placa', 'sum_valor_servico']
+    list_display = ['numero_ordem', 'moto_chassi', 'moto_placa']
 
     def moto_chassi(self, instance):
         return instance.ordemservico.moto.cd_chassi
@@ -152,14 +152,7 @@ class ServicoporordemAdmin(admin.ModelAdmin):
 
     def numero_ordem(self, instance):
         return instance.ordemservico.nu_ordem
-
-    def get_queryset(self, request):
-        qs = super(ServicoporordemAdmin, self).get_queryset(request)
-        return qs.annotate(valor_servico=Sum('servico__nu_valor'))
-
-    def sum_valor_servico(self, obj):
-      return obj.valor_servico
-
+  
 class TransacaoAdmin(admin.ModelAdmin):
     list_display = ['dt_data']
 
@@ -173,6 +166,98 @@ class UfAdmin(admin.ModelAdmin):
             request.method = 'GET'
             messages.error(request, e.message)
             return super(UfAdmin, self).changelist_view(request, extra_context)
+
+class NfDetalhadaAdmin(admin.ModelAdmin):
+    list_display = ['numero_ordem', 'moto_chassi', 'moto_placa', 'sum_valor']
+
+    def moto_chassi(self, instance):
+        return instance.ordemservico.moto.cd_chassi
+
+    def moto_placa(self, instance):
+        return instance.ordemservico.moto.placa
+
+    def numero_ordem(self, instance):
+        return instance.ordemservico.nu_ordem
+
+class MotoDetalhadaAdmin(admin.ModelAdmin):
+    list_display = ['moto_chassi',
+                    'moto_placa',
+                    'moto_marca',
+                    'moto_modelo',
+                    'moto_cor',
+                    'moto_ano_fabricacao',
+                    'moto_cilindradas',
+                    'moto_local']
+
+    def moto_chassi(self, instance):
+        return instance.moto.cd_chassi
+
+    def moto_placa(self, instance):
+        return instance.moto.placa
+
+    def moto_marca(self, instance):
+        return instance.moto.id_modelo.id_marca.de_marca
+
+    def moto_modelo(self, instance):
+        return instance.moto.id_modelo.de_modelo
+
+    def moto_cor(self, instance):
+        return instance.moto.cor
+
+    def moto_ano_fabricacao(self, instance):
+        return instance.moto.ano_fabricacao
+
+    def moto_cilindradas(self, instance):
+        return instance.moto.id_modelo.nu_cilindradas
+
+    def moto_local(self, instance):
+        return instance.moto.id_local.de_local
+
+class ClienteDetalhadoAdmin(admin.ModelAdmin):
+    list_display = ['cliente_cpf',
+                    'cliente_nome',
+                    'cliente_telefone',
+                    'logradouro',
+                    'numero',
+                    'bairro',
+                    'cep',
+                    'cidade',
+                    'uf',
+                    'cd_chassi',
+                    'de_marca',
+                    'de_modelo',
+                    'cor',
+                    'ano_fabricacao',
+                    'nu_cilindradas',
+                    'placa',
+                    'de_local']
+
+    def cliente_cpf(self, instance):
+        return instance.cliente.cd_cpfcliente
+
+    def cliente_nome(self, instance):
+        return instance.cliente.nm_cliente
+
+    def cliente_telefone(self, instance):
+        return instance.cliente.nu_telefone
+
+    def logradouro(self, instance):
+        return instance.cliente.id_endereco.id_logradouro.nm_logradouro
+
+    def numero(self, instance):
+        return instance.cliente.id_endereco.nu_numero
+
+    def bairro(self, instance):
+        return instance.cliente.id_endereco.id_logradouro.id_bairro.nm_bairro
+
+    def cep(self, instance):
+        return instance.cliente.id_endereco.cd_cep
+
+    def cidade(self, instance):
+        return instance.cliente.id_endereco.id_logradouro.id_bairro.id_cidade.nm_cidade
+
+    def uf(self, instance):
+        return instance.cliente.id_endereco.id_logradouro.id_bairro.id_cidade.cd_uf.nm_uf
 
 admin.site.register(Bairro, BairroAdmin)
 admin.site.register(Cidade, CidadeAdmin)
@@ -190,3 +275,6 @@ admin.site.register(Servico, ServicoAdmin)
 admin.site.register(Servicoporordem, ServicoporordemAdmin)
 admin.site.register(Transacao, TransacaoAdmin)
 admin.site.register(Uf, UfAdmin)
+admin.site.register(NfDetalhada, NfDetalhadaAdmin)
+admin.site.register(MotoDetalhada, MotoDetalhadaAdmin)
+admin.site.register(ClienteDetalhado, ClienteDetalhadoAdmin)
